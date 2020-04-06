@@ -33,7 +33,11 @@ class ViewController: UIViewController, WKNavigationDelegate {
         progressView.sizeToFit()
         let progressButton = UIBarButtonItem(customView: progressView)
         
-        toolbarItems = [progressButton, spacer, refresh]
+        let backButton = UIBarButtonItem(title: "Back", style: .done, target: webView, action: #selector(webView.goBack))
+        
+        let forwardButton = UIBarButtonItem(title: "Forward", style: .done, target: webView, action: #selector(webView.goForward))
+        
+        toolbarItems = [progressButton, spacer, backButton, refresh, forwardButton]
         navigationController?.isToolbarHidden = false
         
         // addObserver have 4 parameters 1. who the observer is. 2. what properties we want to observe. 3. which value we want so newValue. 4. which context nil
@@ -60,7 +64,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
     
     func openPage(action: UIAlertAction) {
         
-        guard let actionTitle = action.title else { return}
+        guard let actionTitle = action.title else { return }
         guard let url = URL(string: "https://" + actionTitle) else { return }
         webView.load(URLRequest(url: url))
     }
@@ -90,9 +94,15 @@ class ViewController: UIViewController, WKNavigationDelegate {
                 if host.contains(website) {
                     decisionHandler(.allow)
                     return
+//                } else {
+//                    let alert = UIAlertController(title: "it's blocked", message: "OK", preferredStyle: .alert)
+//                    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+//                    present(alert, animated: true)
+//
                 }
             }
         }
+        
         decisionHandler(.cancel) // 5. We didn't found any response so cancel loading
     }
 }
